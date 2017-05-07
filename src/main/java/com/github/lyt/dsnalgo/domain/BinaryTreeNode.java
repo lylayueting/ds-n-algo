@@ -6,20 +6,31 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BinaryTreeNode {
-	private int value;
-	private BinaryTreeNode left;
-	private BinaryTreeNode right;
 
-	private int dept;
-	private int offset;
+  private int value;
+  private BinaryTreeNode left;
+  private BinaryTreeNode right;
 
-	public BinaryTreeNode(int value) {
-		this.value = value;
-	}
+  private int dept;
+  private int offset;
 
-	public BinaryTreeNode(int value, BinaryTreeNode left, BinaryTreeNode right) {
-		this.value = value;
-		this.left = left;
-		this.right = right;
-	}
+  public BinaryTreeNode(int value) {
+    this.value = value;
+  }
+
+  public BinaryTreeNode(int value, BinaryTreeNode left, BinaryTreeNode right) {
+    this.value = value;
+    this.left = left;
+    this.right = right;
+  }
+
+  @Override
+  public String toString() {
+    return this.value
+        + " ("
+        + this.dept
+        + ","
+        + this.offset
+        + ")";
+  }
 }

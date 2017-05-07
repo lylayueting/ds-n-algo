@@ -1,125 +1,228 @@
 package com.github.lyt.dsnalgo.datastructure;
 
+import com.github.lyt.dsnalgo.domain.BinaryTreeNode;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
-
+import java.util.Stack;
 import lombok.Getter;
-
-import com.github.lyt.dsnalgo.domain.BinaryTreeNode;
+import lombok.NoArgsConstructor;
 
 /**
  * Unique value unbalanced BST.
  */
 @Getter
+@NoArgsConstructor
 public class BinarySearchTree {
 
-	private BinaryTreeNode root;
-	private int size;
+  private BinaryTreeNode root;
+  private int size;
 
-	public BinaryTreeNode getRoot() {
-		return root;
-	}
+  public BinaryTreeNode getRoot() {
+    return root;
+  }
 
-	public int size() {
-		return size;
-	}
+  public int size() {
+    return size;
+  }
 
-	public BinarySearchTree(int[] array) {
-		for (int x : array) {
-			this.insert(x);
-		}
+  public BinarySearchTree(int[] array) {
+    for (int x : array) {
+      this.insert(x);
+    }
 
-		assert size == array.length;
-	}
+    assert size == array.length;
+  }
 
-	public BinarySearchTree(List<Integer> list) {
-		for (int x : list) {
-			this.insert(x);
-		}
+  public BinarySearchTree(List<Integer> list) {
+    for (int x : list) {
+      this.insert(x);
+    }
 
-		assert size == list.size();
-	}
+    assert size == list.size();
+  }
 
-	public void insert(int value) {
-		BinaryTreeNode current = root;
+  public static BinaryTreeNode insertRecursive(BinaryTreeNode root, int value) {
+    if (root == null) {
+      root = new BinaryTreeNode(value);
+      return root;
+    }
 
-		BinaryTreeNode newNode = new BinaryTreeNode(value);
+    if (value < root.getValue()) {
+      root.setLeft(insertRecursive(root.getLeft(), value));
+      return root;
+    }
 
-		if (null == current) {
-			current = newNode;
-			current.setDept(0);
-			current.setOffset(0);
-			root = current;
-			size = 1;
-			return;
-		}
+    if (value > root.getValue()) {
+      root.setRight(insertRecursive(root.getRight(), value));
+      return root;
+    }
 
-		while (true) {
-			newNode.setDept(current.getDept() + 1);
+    // if (value == root.value)
+    return root;
+  }
 
-			if (current.getValue() > value) {
-				if (null != current.getLeft()) {
-					current = current.getLeft();
-					continue;
-				}
+  public void insert(int value) {
+    if (this.root == null) {
+      BinaryTreeNode newNode = new BinaryTreeNode(value);
+      newNode.setDept(0);
+      newNode.setOffset(0);
+      this.root = newNode;
+      this.size = 1;
+      return;
+    }
 
-				newNode.setOffset(current.getOffset() * 2);
-				current.setLeft(newNode);
-				break;
-			}
+    BinaryTreeNode current = this.root;
 
-			if (current.getValue() < value) {
-				if (null != current.getRight()) {
-					current = current.getRight();
-					continue;
-				}
+    while (true) {
+      if (current.getValue() < value) {
+        if (current.getRight() == null) {
+          BinaryTreeNode newNode = new BinaryTreeNode(value);
+          newNode.setDept(current.getDept() + 1);
+          newNode.setOffset(2 * current.getOffset() + 1);
+          current.setRight(newNode);
+          this.size++;
+          return;
+        }
 
-				newNode.setOffset(current.getOffset() * 2 + 1);
-				current.setRight(newNode);
-				break;
-			}
+        current = current.getRight();
+        continue;
+      }
 
-			throw new IllegalArgumentException("Value exists in current tree.");
-		}
+      if (current.getValue() > value) {
+        if (current.getLeft() == null) {
+          BinaryTreeNode newNode = new BinaryTreeNode(value);
+          newNode.setDept(current.getDept() + 1);
+          newNode.setOffset(2 * current.getOffset());
+          current.setLeft(newNode);
+          this.size++;
+          return;
+        }
 
-		size++;
-	}
+        current = current.getLeft();
+        continue;
+      }
 
-	public void delete(int value) {
+//    if (current.getValue() == value)
+      return;
+    }
+  }
 
-	}
+  public void delete(int value) {
 
-	public static void print(BinarySearchTree tree) {
-		if (tree.getRoot() == null) {
-			return;
-		}
+  }
 
-		Queue<BinaryTreeNode> parent = new ArrayDeque<>();
-		Queue<BinaryTreeNode> children = new ArrayDeque<>();
+  public static void printInorderRecursive(BinaryTreeNode root) {
+    if (root == null) {
+      return;
+    }
 
-		parent.add(tree.getRoot());
+    printInorderRecursive(root.getLeft());
+    System.out.print(root.getValue() + " ");
+    printInorderRecursive(root.getRight());
+  }
 
-		while (!parent.isEmpty()) {
-			BinaryTreeNode current = parent.remove();
+  /**
+   * Prints a BST with given root in a line separated by single space, pre-order.
+   * @param root
+   */
+  public static String preorderIterative(BinaryTreeNode root) {
+    if (root == null) {
+      return "";
+    }
 
-			System.out.print(String.format("| %d (%d,%d) ", current.getValue(), current.getDept(),
-					current.getOffset()));
+    StringBuilder builder = new StringBuilder();
 
-			if (null != current.getLeft()) {
-				children.add(current.getLeft());
-			}
+    Stack<BinaryTreeNode> stack = new Stack<>();
+    stack.push(root);
 
-			if (null != current.getRight()) {
-				children.add(current.getRight());
-			}
+    while (!stack.empty()) {
+      BinaryTreeNode top = stack.pop();
 
-			if (parent.isEmpty()) {
-				parent.addAll(children);
-				children.clear();
+      builder.append(top.getValue()).append(" ");
 
-				System.out.print("|\n");
-			}
-		}
-	}
+      if (top.getRight() != null) {
+        stack.push(top.getRight());
+      }
+
+      if (top.getLeft() != null) {
+        stack.push(top.getLeft());
+      }
+    }
+
+    return builder.toString();
+  }
+
+  public static String inorderIterative(BinaryTreeNode root) {
+    if (root == null) {
+      return "";
+    }
+
+    StringBuilder builder = new StringBuilder();
+
+    Stack<BinaryTreeNode> stack = new Stack<>();
+    stack.push(root);
+
+    while (!stack.isEmpty()) {
+      BinaryTreeNode top = stack.peek();
+
+      if (top.getLeft() == null) {
+        while (top.getRight() == null) {
+          builder.append(top.getValue()).append(" ");
+          stack.pop();
+
+          if (stack.isEmpty()) {
+            return builder.toString();
+          }
+
+          top = stack.peek();
+        }
+
+        builder.append(top.getValue()).append(" ");
+        stack.pop();
+        stack.push(top.getRight());
+        continue;
+      }
+
+      stack.push(top.getLeft());
+    }
+
+    return builder.toString();
+  }
+
+  public static String postorderIterative(BinaryTreeNode root) {
+
+  }
+
+  public static void print(BinarySearchTree tree) {
+    if (tree.getRoot() == null) {
+      return;
+    }
+
+    Queue<BinaryTreeNode> parent = new ArrayDeque<>();
+    Queue<BinaryTreeNode> children = new ArrayDeque<>();
+
+    parent.add(tree.getRoot());
+
+    while (!parent.isEmpty()) {
+      BinaryTreeNode current = parent.remove();
+
+      System.out.print(current.toString());
+
+      if (null != current.getLeft()) {
+        children.add(current.getLeft());
+      }
+
+      if (null != current.getRight()) {
+        children.add(current.getRight());
+      }
+
+      if (parent.isEmpty()) {
+        parent.addAll(children);
+        children.clear();
+
+        System.out.print("|\n");
+      }
+    }
+  }
 }
