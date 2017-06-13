@@ -147,24 +147,28 @@ public class BinarySearchTree {
     return height;
   }
 
-  private static int biggest(BinaryTreeNode root) {
-    assert root != null;
+  public static BinaryTreeNode biggest(BinaryTreeNode root) {
+    if (root == null) {
+      return null;
+    }
 
     while (root.getRight() != null) {
       root = root.getRight();
     }
 
-    return root.getValue();
+    return root;
   }
 
-  private static int smallest(BinaryTreeNode root) {
-    assert root != null;
+  public static BinaryTreeNode smallest(BinaryTreeNode root) {
+    if (root == null) {
+      return null;
+    }
 
     while (root.getLeft() != null) {
       root = root.getLeft();
     }
 
-    return root.getValue();
+    return root;
   }
 
   @Override
@@ -259,13 +263,13 @@ public class BinarySearchTree {
     }
 
     if (node.getLeft() != null) {
-      int nextSmaller = biggest(node.getLeft());
+      int nextSmaller = biggest(node.getLeft()).getValue();
       node.setValue(nextSmaller);
       node.setLeft(deleteRecursive(node.getLeft(), nextSmaller));
       return node;
     }
 
-    int nextBigger = smallest(node.getRight());
+    int nextBigger = smallest(node.getRight()).getValue();
     node.setValue(nextBigger);
     node.setRight(deleteRecursive(node.getRight(), nextBigger));
     return node;
