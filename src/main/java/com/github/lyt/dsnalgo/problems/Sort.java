@@ -96,4 +96,46 @@ public class Sort {
       gap = gapSequence(len, ++round);
     }
   }
+
+  /**
+   * Merge Sort
+   *
+   * Space complexity: O(N);
+   * Time complexity: O(N*lgN)
+   */
+  public static void mergeSortRecursive(int[] array, int low, int high) {
+    if (low >= high) {
+      return;
+    }
+
+    int half = (low + high) / 2;
+    mergeSortRecursive(array, low, half);
+    mergeSortRecursive(array, half + 1, high);
+
+    mergeTwoHalves(array, low, half, high);
+  }
+
+  private static void mergeTwoHalves(int[] array, int low, int half, int high) {
+    int len = high - low + 1;
+    int[] spare = new int[len];
+
+    int left = low, right = half + 1, spareIndex = 0;
+    while (left <= half && right <= high) {
+      if (array[left] <= array[right]) {
+        spare[spareIndex++] = array[left++];
+      } else {
+        spare[spareIndex++] = array[right++];
+      }
+    }
+
+    while (left <= half) {
+      spare[spareIndex++] = array[left++];
+    }
+
+    while (right <= high) {
+      spare[spareIndex++] = array[right++];
+    }
+
+    System.arraycopy(spare, 0, array, low, len);
+  }
 }

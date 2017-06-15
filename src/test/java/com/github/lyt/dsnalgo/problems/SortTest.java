@@ -85,4 +85,16 @@ public class SortTest {
       Assert.assertArrayEquals(EXPECTED_RESULTS[i], array);
     }
   }
+
+  @Test
+  public void testMergeSort() {
+
+    for (int i = 0; i < TEST_CASES.length; i++) {
+      int[] array = Arrays.copyOf(TEST_CASES[i], TEST_CASES[i].length);
+
+      Sort.mergeSortRecursive(array, 0, array.length - 1);
+
+      Assert.assertArrayEquals(EXPECTED_RESULTS[i], array);
+    }
+  }
 }
