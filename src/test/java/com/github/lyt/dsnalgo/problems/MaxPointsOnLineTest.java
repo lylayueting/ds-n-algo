@@ -22,13 +22,4 @@ public class MaxPointsOnLineTest {
 
     Assert.assertEquals(2, MaxPointsOnLine.maxPoints(points));
   }
-
-  @Test
-  public void test() {
-    char[] matrix = "abcesfcsadee".toCharArray();
-    char[] str = {'b', 'c', 'c', 'e', 'd'};
-
-    boolean result = new Problem().hasPath(matrix, 3, 4, str);
-    System.out.println(result);
-  }
 }
