@@ -323,31 +323,43 @@ public class BinarySearchTree {
     StringBuilder builder = new StringBuilder();
 
     Stack<BinaryTreeNode> stack = new Stack<>();
-    stack.push(root);
+    BinaryTreeNode node = root;
 
-    while (!stack.isEmpty()) {
-      BinaryTreeNode top = stack.peek();
-
-      if (top.getLeft() == null) {
-        while (top.getRight() == null) {
-          builder.append(top.getValue()).append(" ");
-          stack.pop();
-
-          if (stack.isEmpty()) {
-            return builder.toString();
-          }
-
-          top = stack.peek();
-        }
-
-        builder.append(top.getValue()).append(" ");
-        stack.pop();
-        stack.push(top.getRight());
-        continue;
+    do {
+      if (node != null) {
+        stack.push(node);
+        node = node.getLeft();
+      } else {
+        node = stack.pop();
+        builder.append(node.getValue()).append(" ");
+        node = node.getRight();
       }
-
-      stack.push(top.getLeft());
-    }
+    } while (!stack.empty() || node != null);
+//    stack.push(root);
+//
+//    while (!stack.isEmpty()) {
+//      BinaryTreeNode top = stack.peek();
+//
+//      if (top.getLeft() == null) {
+//        while (top.getRight() == null) {
+//          builder.append(top.getValue()).append(" ");
+//          stack.pop();
+//
+//          if (stack.isEmpty()) {
+//            return builder.toString();
+//          }
+//
+//          top = stack.peek();
+//        }
+//
+//        builder.append(top.getValue()).append(" ");
+//        stack.pop();
+//        stack.push(top.getRight());
+//        continue;
+//      }
+//
+//      stack.push(top.getLeft());
+//    }
 
     return builder.toString();
   }
